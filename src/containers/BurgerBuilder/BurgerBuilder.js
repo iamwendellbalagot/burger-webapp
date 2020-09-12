@@ -35,6 +35,10 @@ class BurgerBuilder extends Component {
         loader: false
     }
 
+    componentDidMount(){
+        console.log(this.props)
+    }
+
     updatePurchaseState (ingredients) {
         const sum = Object.keys( ingredients )
             .map( igKey => {
@@ -86,37 +90,46 @@ class BurgerBuilder extends Component {
     }
 
     continuePurchaseHandler = () => {
-        this.setState({loader:true});
+        // this.setState({loader:true});
 
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer:{
-                name: 'Wendell Balagot',
-                address: {
-                    city: 'test city',
-                    street: 'test street',
-                    zipcode: '3948',
-                    country: 'Philippines'
-                },
-                email: 'test@email.com'
-            },
-            deliveryType: 'fast'
-        };
+        // const order = {
+        //     ingredients: this.state.ingredients,
+        //     price: this.state.totalPrice,
+        //     customer:{
+        //         name: 'Wendell Balagot',
+        //         address: {
+        //             city: 'test city',
+        //             street: 'test street',
+        //             zipcode: '3948',
+        //             country: 'Philippines'
+        //         },
+        //         email: 'test@email.com'
+        //     },
+        //     deliveryType: 'fast'
+        // };
 
-        axios.post('/orders.json', order)
-         .then(res => {
-             this.setState({
-                 loader: false,
-                 purchashing:false
-             });
-         })
-         .catch(err => {
-            this.setState({
-                loader: false,
-                purchashing: false
-            });
-         });
+        // axios.post('/orders.json', order)
+        //  .then(res => {
+        //      this.setState({
+        //          loader: false,
+        //          purchashing:false
+        //      });
+        //  })
+        //  .catch(err => {
+        //     this.setState({
+        //         loader: false,
+        //         purchashing: false
+        //     });
+        //  });
+        const queryParams = [];
+        for (let i in this.state.ingredients){
+            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]))
+        }
+        const queryString = queryParams.join('&');
+        this.props.history.push({
+            pathname:'/checkout',
+            search:'?' + queryString
+        })
     }
 
     render () {
